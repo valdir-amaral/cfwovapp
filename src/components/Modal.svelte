@@ -32,6 +32,7 @@
 <style>
     #modal {
         background-color: rgba(0, 0, 0, .4);
+        transition: 1s;
         position: fixed;
         top: 0;
         left: 0;
@@ -47,6 +48,8 @@
         height: 450px;
         background-color: #F6F6F6;
         border-radius: 10px;
+        transform: translateY(100px);
+        animation: modal .5s forwards;
     }
     .buttons {
         display: flex;
@@ -64,5 +67,14 @@
     }
     .modal-body p {
         text-align: center;
+    }
+
+    @keyframes modal {
+        from {
+            
+        }
+        to {
+            transform: translateY(-20px);
+        }
     }
 </style>

@@ -13,7 +13,6 @@
     function openModal(event) {
         ativo = !ativo
         missaoFocada = event.target.previousElementSibling.src.slice(35).replace('@2x.jpg', '')
-        alert(missaoFocada)
     }
     
     function mandarmsg(msg) {
