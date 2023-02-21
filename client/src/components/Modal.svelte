@@ -1,13 +1,17 @@
 <script>
-    export let ativo, tituloModal, corpoModal, missaoFocada
-    import { voto } from "../stores";
-    function votar(event) {
-        fecharModal()
-        $voto.mission = localStorage.setItem('voto', missaoFocada);
+    import { createEventDispatcher } from 'svelte';
+    const dispatch = createEventDispatcher()
+    export let ativo, tituloModal, corpoModal
+    function confirm(event) {
+        fecharModal();
+        dispatch('confirm');
     }
-
+    function close() {
+        fecharModal();
+        dispatch('close')
+    }
     function fecharModal() {
-        ativo = !ativo
+        ativo = !ativo;
     }
 </script>
 
@@ -20,8 +24,8 @@
         <div class="modal-body">
             <p>{corpoModal}</p>
             <div class="buttons">
-                <button on:click={votar}>Sim!</button>
-                <button on:click={fecharModal}>Não!</button>
+                <button on:click={confirm}>Sim!</button>
+                <button on:click={close}>Não!</button>
             </div>
         </div>
     </div>

@@ -1,6 +1,10 @@
 <script>
+    import { onMount } from "svelte";
     import ButtonMenu from "../components/ButtonMenu.svelte";
-    
+    onMount(() => {
+        let id = localStorage.id ? localStorage.id : Math.random().toString(16).substr(2);
+        localStorage.setItem('id', id)
+    })
 </script>
 
 <i class="fa-solid fa-staff-snake"></i>

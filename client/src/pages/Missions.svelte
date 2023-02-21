@@ -2,7 +2,6 @@
     import Fetch from "../components/Fetch.svelte";
     import Header from "../components/Header.svelte";
     import Modal from "../components/Modal.svelte";
-    import {voto} from '../stores.js'
     const clanID = "8a1ead4a-2269-4ae8-95b3-afce4639bd15";
     const botID = '1739c236-bce3-4830-b9fd-b493fb55cd5f'
     const keyAPI = 'lv54QwdhOaTdAKCBcVCobHu2a2LYInHmGFlXP1N1K6eCQEYiUjXKoMStIOnLRyZx'
@@ -14,38 +13,23 @@
         ativo = !ativo
         missaoFocada = event.target.previousElementSibling.src.slice(35).replace('@2x.jpg', '')
     }
-    
-    function mandarmsg(msg) {
-        fetch("https://api.wolvesville.com/clans/8a1ead4a-2269-4ae8-95b3-afce4639bd15/chat", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-            'Authorization': `Bot ${keyAPI}`
-        }, 
-        body: JSON.stringify({
-            'message': msg
-        })
-    })
-}
+    function votar() {
+        localStorage.voto = missaoFocada
+    }
+
     
         
     
 </script>
 
 <Header titulo="Missões"/>
-<button on:click={() => {
-    mandarmsg(prompt('msg:'))
-}}>
-    Mandar Mensagem
-</button>
 <p>Total de votos:</p>
-{#if $voto}
-<p>Missão votada: {$voto.mission}</p>
-{/if}
+<p>Missão votada: {localStorage.voto}</p>
+
 <Modal bind:ativo bind:missaoFocada
 tituloModal="Confirmação"
-corpoModal={`Quer mesmo votar nessa (${missaoFocada})? Lembre-se que você tem só um voto`}/>
+corpoModal={`Quer mesmo votar nessa (${missaoFocada})? Lembre-se que você tem só um voto`}
+on:confirm={votar}/>
 <Fetch endpoint="clans/{clanID}/quests/available" let:data>
     <ul>
         {#each data as mission}
