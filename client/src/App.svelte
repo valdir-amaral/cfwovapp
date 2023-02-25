@@ -1,7 +1,7 @@
 <script>
 	import { pbStore } from './stores.js';
-	pbStore.set(location);
-	
+	pbStore.set(`${location.origin}`);
+
 	import { Router } from 'svelte-router-spa';
     import { routes } from './routes';
 	let options = { gaPageviews: true};	

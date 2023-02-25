@@ -1,61 +1,25 @@
 <script>
-
+	import { pbStore } from '../stores.js'
 	import Button from "../components/Button.svelte";
 	import {navigateTo} from 'svelte-router-spa';
-    //import InputPass from "../components/InputPass.svelte";
 	import Input from "../components/Input.svelte";
     
 	let warn;
 
-	import {user} from '../stores.js'
+	import { user } from '../stores.js'
     import MainTitle from "../components/MainTitle.svelte";
 
-    function onLogin(event){
-		console.log($user.name)
-		console.log($user.pass)
-		event.preventDefault();
-		if (!$user.name){
-			warn = 'Insira seu usuário';
-			return;
-		}
+    async function onLogin() {
+        const authData = await $pbStore.collection('usuarios').authWithPassword($user.name, $user.pass);
 
-		if (!$user.pass){
-			warn = 'Insira sua senha';
-			return;
-		}
+		// after the above you can also access the auth data from the authStore
+		console.log($pbStore.authStore.isValid);
+		console.log($pbStore.authStore.token);
+		console.log($pbStore.authStore.model.id);
 
-		fetch('/api/login', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'Accept': 'application/json'
-			},
-			body: JSON.stringify({
-				usuario: $user.name,
-				senha: $user.pass,
-			})
-		})
-		.then(resp => resp.json())
-		.then(json => {
-			if (json.status.toUpperCase() === 'NOK') {
-				warn = json.data
-				return
-			}
-			
-			sessionStorage.setItem('loggedIn', true);
-			sessionStorage.setItem('user', $user.name);
-			sessionStorage.setItem('userName', json.data.full_name);
-			sessionStorage.setItem('warehouse', $user.warehouse);
-			$user.name = json.data.full_name;
-			$user.pass = null;
-			navigateTo('menupage');
-		
-		})
-		.catch(err => {
-			warn = err;
-			$user.pass = '';
-		})
-	}
+		// "logout" the last authenticated model
+		$pbStore.authStore.clear();
+    }
 
 </script>
 
