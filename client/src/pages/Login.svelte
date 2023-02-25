@@ -10,15 +10,16 @@
     import MainTitle from "../components/MainTitle.svelte";
 
     async function onLogin() {
+		if ($user.name.length == 0 || $user.pass.length == 0) {
+			return
+		}
         const authData = await $pbStore.collection('usuarios').authWithPassword($user.name, $user.pass);
-		console.log($pbStore)
-		// after the above you can also access the auth data from the authStore
-		console.log($pbStore.authStore.isValid);
-		console.log($pbStore.authStore.token);
-		console.log($pbStore.authStore.model.id);
-
-		// "logout" the last authenticated model
-		$pbStore.authStore.clear();
+		if($pbStore.authStore.isValid) {
+			localStorage['id'] = $pbStore.authStore.model.id
+			navigateTo('/inicio')
+		} else {
+			alert('não deu')
+		}
     }
 
 </script>

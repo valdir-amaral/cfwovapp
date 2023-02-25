@@ -22,7 +22,7 @@
     <ButtonMenu nav="" text="Sobre Nós" image="fa-solid fa-heart"/>
     <ButtonMenu nav="ranking" text="Ranking" image="fa-solid fa-medal"/>
     <ButtonMenu nav="" text="Redes Sociais" image="fa-solid fa-hashtag"/>
-    
+
 </div>
 
 
