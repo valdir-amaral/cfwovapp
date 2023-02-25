@@ -1,10 +1,27 @@
 <script>
     import { onMount } from "svelte";
     import ButtonMenu from "../components/ButtonMenu.svelte";
-    
+
+    function alteraId(username) {
+            if(username === undefined) {
+                return
+            }
+            if(!localStorage['idPlayer'] && localStorage['username'] != undefined) {
+                fetch(`https://api.wolvesville.com/players/search?username=${localStorage['username']}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'Authorization': 'Bot lv54QwdhOaTdAKCBcVCobHu2a2LYInHmGFlXP1N1K6eCQEYiUjXKoMStIOnLRyZx'
+                    }
+                })
+                .then((r) => r.json())
+                .then((json) => localStorage.idPlayer = json.id)
+            }
+        }
     onMount(() => {
-        let id = localStorage.id ? localStorage.id : Math.random().toString(16).substr(2);
-        localStorage.setItem('id', id)
+        let username = localStorage['username']
+        alteraId(username)
     })
 </script>
 

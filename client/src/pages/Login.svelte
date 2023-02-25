@@ -15,7 +15,7 @@
 		}
         const authData = await $pbStore.collection('usuarios').authWithPassword($user.name, $user.pass);
 		if($pbStore.authStore.isValid) {
-			localStorage['id'] = $pbStore.authStore.model.id
+			localStorage['username'] = $pbStore.authStore.model.username
 			navigateTo('/inicio')
 		} else {
 			alert('não deu')
