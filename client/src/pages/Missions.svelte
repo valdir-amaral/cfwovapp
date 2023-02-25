@@ -1,20 +1,43 @@
 <script>
+    import { pbStore } from "../stores";
     import Fetch from "../components/Fetch.svelte";
     import Header from "../components/Header.svelte";
     import Modal from "../components/Modal.svelte";
     const clanID = "8a1ead4a-2269-4ae8-95b3-afce4639bd15";
-    const botID = '1739c236-bce3-4830-b9fd-b493fb55cd5f'
-    const keyAPI = 'lv54QwdhOaTdAKCBcVCobHu2a2LYInHmGFlXP1N1K6eCQEYiUjXKoMStIOnLRyZx'
     
     let ativo = false;
-
+    let nomeMissao
+    if(nomeMissao === undefined && localStorage.nomeMissao) nomeMissao = localStorage.nomeMissao
+    else if (!localStorage.nomeMissao) nomeMissao = 'nenhuma'
     var missaoFocada
+
     function openModal(event) {
         ativo = !ativo
         missaoFocada = event.target.previousElementSibling.src.slice(35).replace('@2x.jpg', '')
     }
-    function votar() {
-        localStorage.voto = missaoFocada
+
+    async function votar() {
+        nomeMissao = missaoFocada
+        localStorage.nomeMissao = missaoFocada
+        if (localStorage.voto) {
+            const voto = await $pbStore.collection('votos').update(localStorage.voto, {"skin": missaoFocada, "user": localStorage.username})
+            .then((res) => {
+                localStorage.voto = res.id
+            })
+        } else {
+            let data = {
+                user: localStorage.username,
+                skin: missaoFocada
+            }
+            await $pbStore.collection('votos').create(data)
+            .then(res => {
+                localStorage.voto = res.id
+            })
+            .catch(error => {
+                console.log(error)
+            })
+            
+        }
     }
 
     
@@ -24,7 +47,7 @@
 
 <Header titulo="Missões"/>
 <p>Total de votos:</p>
-<p>Missão votada: {localStorage.voto}</p>
+<p>Missão votada: {nomeMissao}</p>
 
 <Modal bind:ativo bind:missaoFocada
 tituloModal="Confirmação"
