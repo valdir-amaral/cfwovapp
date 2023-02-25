@@ -17,39 +17,29 @@ body {
 	font-family: 'Montserrat', sans-serif;
 }
 
-label {
-	display: block;
+h2 {
+	font-weight: 300;
+	text-align: center;
+	padding: 0px 2px;
+	font-size: 16px;
+	margin-bottom: 30px;
 }
-
 input, button, select, textarea {
 	font-family: inherit;
 	font-size: inherit;
-	-webkit-padding: 0.4em 0;
 	padding: 0.4em;
-	margin: 0 0 0.5em 0;
 	box-sizing: border-box;
-	border: 1px solid #ccc;
-	border-radius: 2px;
 }
 
-input:disabled {
-	color: #ccc;
-}
-
-button {
-	color: #333;
-	background-color: #f4f4f4;
+p:focus, img:focus {
 	outline: none;
 }
 
-button:disabled {
-	color: #999;
-}
 
-button:not(:disabled):active {
-	background-color: #ddd;
+label {
+	display: block;
 }
-
-button:focus {
-	border-color: #666;
+input::-webkit-input-placeholder{
+    font-family: 'Montserrat', sans-serif;
+	font-size: 15px;
 }
