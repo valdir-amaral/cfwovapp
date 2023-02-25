@@ -11,7 +11,7 @@
 
     async function onLogin() {
         const authData = await $pbStore.collection('usuarios').authWithPassword($user.name, $user.pass);
-
+		console.log($pbStore)
 		// after the above you can also access the auth data from the authStore
 		console.log($pbStore.authStore.isValid);
 		console.log($pbStore.authStore.token);
