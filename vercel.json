@@ -1,26 +1,30 @@
 {
-    "routes": [
-        {
-            "src": "/api/.*",
-            "dest": "server/index.js"
-        }
-    ],
+    "version": 2,
     "builds": [
       {
         "src": "client/package.json",
         "use": "@vercel/static-build",
         "config": {
           "buildCommand": "npm install && npm run build",
-          "outputDirectory": "client/build"
+          "outputDirectory": "client/public"
         }
       },
       {
-        "src": "server/package.json",
-        "use": "@vercel/node",
-        "config": {
-            "buildCommand": "npm install",
-            "outputDirectory": "server/node_modules"
-        }
+        "src": "server/index.js",
+        "use": "@vercel/node"
       }
-    ]
+    ],
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "server/index.js"
+      },
+      {
+        "src": "/(.*)",
+        "dest": "client/public/index.html"
+      }
+    ],
+    "env": {
+      "NODE_ENV": "production"
+    }
   }
