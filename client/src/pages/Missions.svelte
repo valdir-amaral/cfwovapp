@@ -10,12 +10,14 @@
     
     let ativo = false;
     let nomeMissao
+    let missao
     if(nomeMissao === undefined && localStorage.nomeMissao) nomeMissao = localStorage.nomeMissao
     else if (!localStorage.nomeMissao) nomeMissao = 'nenhuma'
     var missaoFocada
-
+    let missaoId
     function openModal(event) {
         ativo = !ativo
+        missaoId = event.target.parentElement.previousElementSibling.innerText.slice(4)
         missaoFocada = event.target.previousElementSibling.src.slice(35).replace('@2x.jpg', '')
     }
 
@@ -30,7 +32,8 @@
         } else {
             let data = {
                 user: localStorage.username,
-                skin: missaoFocada
+                skin: missaoFocada,
+                idmissao: missaoId
             }
             await $pbStore.collection('votos').create(data)
             .then(res => {
@@ -60,14 +63,14 @@ on:confirm={votar}/>
 <Fetch endpoint="clans/{clanID}/quests/available" let:data>
     <ul>
         {#each data as mission}
-
+            
             {#if mission.purchasableWithGems}
-            <i class="fa-regular fa-gem"></i>
+            <p><i class="fa-regular fa-gem"></i> -> Gemas</p>
     
             {:else if !mission.purchasableWithGems}
-            <i class="fa-solid fa-coins"></i>
+            <p><i class="fa-solid fa-coins"></i> -> Ouro</p>
             {/if}
-    
+            <p>id: <span>{mission.id}</span></p>
             <li class="card-mission"><img class="img-mis" src="{mission.promoImageUrl.replace(".jpg", "@2x.jpg")}" alt="">
                 <button on:click={openModal} class="btn-vote">⇈ Vote ⇈</button>
             </li>
