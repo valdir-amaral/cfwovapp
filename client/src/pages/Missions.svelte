@@ -33,7 +33,8 @@
             let data = {
                 user: localStorage.username,
                 skin: missaoFocada,
-                idmissao: missaoId
+                idmissao: missaoId,
+                idplayer: localStorage.idPlayer
             }
             await $pbStore.collection('votos').create(data)
             .then(res => {
