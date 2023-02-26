@@ -27,7 +27,7 @@
 
 <i class="fa-solid fa-staff-snake"></i>
 <h2>
-    Bom dia! <br>
+    Bom dia, {localStorage.username ? localStorage.username : 'Desconhecido'}! <br>
     Seja muito bem-vindo(a)
 </h2>
 <h1>

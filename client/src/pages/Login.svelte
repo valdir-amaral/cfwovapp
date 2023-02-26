@@ -9,17 +9,25 @@
 	import { user } from '../stores.js'
     import MainTitle from "../components/MainTitle.svelte";
 
+	function clearWarn() {
+		warn = ''
+	}
     async function onLogin() {
-		if ($user.name.length == 0 || $user.pass.length == 0) {
+		if (!$user.name.length || !$user.pass.length) {
 			return
 		}
-        const authData = await $pbStore.collection('usuarios').authWithPassword($user.name, $user.pass);
-		if($pbStore.authStore.isValid) {
-			localStorage['username'] = $pbStore.authStore.model.username
-			navigateTo('/inicio')
-		} else {
-			alert('não deu')
-		}
+        await $pbStore.collection('usuarios').authWithPassword($user.name, $user.pass)
+		.then((res) => {
+			if($pbStore.authStore.isValid) {
+				localStorage['username'] = $pbStore.authStore.model.username
+				navigateTo('/inicio')
+			}
+		})
+		.catch((err) => {
+
+			warn = 'Usuário e/ou senha incorretos'
+		})
+		
     }
 
 </script>
@@ -32,8 +40,8 @@
 	
 	
 	<form action="POST" autocomplete="off" on:submit|preventDefault>
-		<Input type="text" autocomplete=false name="usuario" label="Usuário" placeholder="Seu usuário" required icon="/images/user.svg" bind:value={$user.name} />
-		<Input type="password" autocomplete=false name="senha" label="Senha" placeholder="Sua senha" required icon="/images/lock.svg" bind:value={$user.pass} showLock />
+		<Input on:onfocus={clearWarn} type="text" autocomplete=false name="usuario" label="Usuário" placeholder="Seu usuário" required icon="/images/user.svg" bind:value={$user.name} />
+		<Input on:onfocus={clearWarn} type="password" autocomplete=false name="senha" label="Senha" placeholder="Sua senha" required icon="/images/lock.svg" bind:value={$user.pass} showLock />
 		{#if warn}
 		<p>{warn}</p>
 		{/if}
@@ -61,8 +69,16 @@
 		width: 80%;
 		max-width: 400px;
 	}
+	h2 {
+		width: 80%;
+		line-height: 25px;
+		max-width: 400px;
+	}
 	h2, p {
 		color: #FFF !important;
+	}
+	p {
+		margin-bottom: 10px;
 	}
 	a {
 		color: #FFF;

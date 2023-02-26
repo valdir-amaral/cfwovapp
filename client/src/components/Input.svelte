@@ -1,5 +1,8 @@
 <script lang="ts">
-  
+    import { createEventDispatcher } from "svelte";
+
+
+    const dispatch = createEventDispatcher()
     export let type = 'text';
     export let name = '';
     export let value = '';
@@ -10,6 +13,7 @@
     export let showPassword = false;
     export let hasError = false;
     export let error = "";
+
 
     let lockIcon;
     $: {
@@ -24,11 +28,15 @@
     let input;
 
     let old_value = undefined;
+
+    function onFocus() {
+        dispatch('onfocus')
+    }
     function onChange(event){
         if (required && !(input.value && input.value.length)){
             value = old_value;
             hasError = true;
-            error = "Field Required!";
+            error = "Campo necessário!";
             return;
         } 
 
@@ -57,7 +65,7 @@
         </div>
         {/if}
 
-        <input bind:this={input} type="{htmlType}" {name} {placeholder} {required} on:change={onChange} />
+        <input on:focus={onFocus} bind:this={input} type="{htmlType}" {name} {placeholder} {required} on:change={onChange} />
 
         {#if !showPassword && type == 'password'}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -111,7 +119,7 @@
         width: 48px;
         height: 44px;
         position: absolute;
-        top: 30px;
+        top: 34px;
         left: 8px;
         display: flex;
         align-items: center;
@@ -127,7 +135,7 @@
         width: 50px;
         height: 50px;
         position: absolute;
-        top: 27px;
+        top: 30px;
         right: 10px;
     }
 

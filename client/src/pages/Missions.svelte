@@ -3,6 +3,7 @@
     import Fetch from "../components/Fetch.svelte";
     import Header from "../components/Header.svelte";
     import Modal from "../components/Modal.svelte";
+    import FullList from "../components/db/FullList.svelte";
     const clanID = "8a1ead4a-2269-4ae8-95b3-afce4639bd15";
     
     let ativo = false;
@@ -46,7 +47,11 @@
 </script>
 
 <Header titulo="Missões"/>
-<p>Total de votos:</p>
+<FullList collection="votos" batch=50 let:records>
+    <p>Total de votos: {records.length}</p>
+    <span slot="error" let:error>{error}</span>
+</FullList>
+
 <p>Missão votada: {nomeMissao}</p>
 
 <Modal bind:ativo bind:missaoFocada
@@ -88,6 +93,14 @@ on:confirm={votar}/>
     }
     .btn-vote {
         width: 100%;
+        font-family: inherit;
+        font-size: inherit;
+        -webkit-padding: 0.4em 0;
+        padding: 0.4em;
+        margin: 0 0 0.5em 0;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 2px;
     }
     .card-mission {
         margin: auto;

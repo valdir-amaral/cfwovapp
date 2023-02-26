@@ -10,7 +10,7 @@
 <header>
     <div class="header-content">
         <!-- svelte-ignore a11y-click-events-have-key-events -->
-        <p class="return-btn" on:click={() => navegar('/')}><i class="fa-solid fa-arrow-left"></i> &nbsp;</p>
+        <p class="return-btn" on:click={() => navegar('/inicio')}><i class="fa-solid fa-arrow-left"></i> &nbsp;</p>
         <p id="title-stock">{titulo}</p>
     </div>
 </header>
