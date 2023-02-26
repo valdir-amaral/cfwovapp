@@ -123,6 +123,18 @@ async function viewDonates() {
         .then((json) => console.log(json))
         }
       }
+      fetch(`https://api.wolvesville.com/clans/${clanID}/members/ba79355f-3596-4077-8d12-b9422c99a5d2/participateInQuests`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bot ${botID}`
+            },
+            body: JSON.stringify({"participateInQuests": true})
+        })
+        .then((res) => res.json())
+        .then((json) => console.log(json))
+        
     }
 viewDonates()
 //cron.schedule('* * * * * *', viewDonates)
