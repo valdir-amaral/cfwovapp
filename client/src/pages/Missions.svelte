@@ -66,10 +66,10 @@ on:confirm={votar}/>
         {#each data as mission}
             
             {#if mission.purchasableWithGems}
-            <p><i class="fa-regular fa-gem"></i> -> Gemas</p>
+            <p class="text-sub"><i class="fa-regular fa-gem"></i> -> Gemas</p>
     
             {:else if !mission.purchasableWithGems}
-            <p><i class="fa-solid fa-coins"></i> -> Ouro</p>
+            <p class="text-sub"><i class="fa-solid fa-coins"></i> -> Ouro</p>
             {/if}
             <p>id: <span>{mission.id}</span></p>
             <li class="card-mission"><img class="img-mis" src="{mission.promoImageUrl.replace(".jpg", "@2x.jpg")}" alt="">
@@ -84,12 +84,16 @@ on:confirm={votar}/>
     ul {
         list-style: none;
         display: flex;
+        gap: 20px;
         flex-direction: column;
         width: fit-content;
         justify-content: center;
         padding: 30px 15px;
         margin: 0px auto;
         max-width: 600px;
+    }
+    .text-sub {
+        margin-top: 10px;
     }
     .btn-vote {
         width: 100%;
@@ -104,6 +108,7 @@ on:confirm={votar}/>
     }
     .card-mission {
         margin: auto;
+        margin-top: 30px
     }
     .img-mis {
         width: 100%;

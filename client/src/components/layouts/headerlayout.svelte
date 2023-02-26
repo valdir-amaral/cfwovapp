@@ -17,7 +17,7 @@
         min-height: 100vh;
 
         background-color: #f3f3f3;
-        color: rgb(38, 61, 38);
+        color: rgb(0, 0, 0);
     }
     .section {
       background-color: #f3f3f3;
