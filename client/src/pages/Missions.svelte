@@ -4,6 +4,8 @@
     import Header from "../components/Header.svelte";
     import Modal from "../components/Modal.svelte";
     import FullList from "../components/db/FullList.svelte";
+    import List from "../components/db/List.svelte";
+    import { raf } from "svelte/internal";
     const clanID = "8a1ead4a-2269-4ae8-95b3-afce4639bd15";
     
     let ativo = false;
@@ -41,9 +43,7 @@
         }
     }
 
-    
         
-    
 </script>
 
 <Header titulo="Missões"/>
@@ -51,7 +51,6 @@
     <p>Total de votos: {records.length}</p>
     <span slot="error" let:error>{error}</span>
 </FullList>
-
 <p>Missão votada: {nomeMissao}</p>
 
 <Modal bind:ativo bind:missaoFocada
@@ -62,24 +61,21 @@ on:confirm={votar}/>
     <ul>
         {#each data as mission}
 
-        {#if mission.purchasableWithGems}
-        <i class="fa-regular fa-gem"></i>
-        <li class="card-mission"><img class="img-mis" src="{mission.promoImageUrl.replace(".jpg", "@2x.jpg")}" alt="">
-            <button on:click={openModal} class="btn-vote">⇈ Vote ⇈</button>
-        </li>
-        {/if}
-
-        {#if !mission.purchasableWithGems}
-        <i class="fa-solid fa-coin"></i>
-        <li class="card-mission"><img class="img-mis" src="{mission.promoImageUrl.replace(".jpg", "@2x.jpg")}" alt="">
-        <button on:click={openModal} class="btn-vote">⇈ Vote ⇈</button>
-        </li>
-        
-        {/if}
+            {#if mission.purchasableWithGems}
+            <i class="fa-regular fa-gem"></i>
+    
+            {:else if !mission.purchasableWithGems}
+            <i class="fa-solid fa-coins"></i>
+            {/if}
+    
+            <li class="card-mission"><img class="img-mis" src="{mission.promoImageUrl.replace(".jpg", "@2x.jpg")}" alt="">
+                <button on:click={openModal} class="btn-vote">⇈ Vote ⇈</button>
+            </li>
 
         {/each}
     </ul>
 </Fetch>
+
 <style>
     ul {
         list-style: none;

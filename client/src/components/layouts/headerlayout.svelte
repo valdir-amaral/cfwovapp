@@ -14,6 +14,8 @@
   <style>
     .app {
         width: 100vw;
+        min-height: 100vh;
+
         background-color: #f3f3f3;
         color: rgb(38, 61, 38);
     }
