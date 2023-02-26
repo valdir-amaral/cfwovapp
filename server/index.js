@@ -86,24 +86,44 @@ async function viewDonates() {
     
 
     for (let i = 0; i < doacoes.length; i++) {
+        let votouEContribuiu = false
         const doacao = doacoes[i];
         const username = doacao.playerUsername;
       
         // Verifica se o usuário está presente no array de votos (records)
         const index = records.findIndex((record) => record.user === username);
         if (index !== -1) {
+            let id
+            records.forEach((voto) => {
+                if (voto.user == username) {
+                    id = voto.idplayer
+                }
+            })
           // Obtém o número de missões que o jogador fez a partir do array qtdMissoes
           const missao = qtdMissoes.find((qtdMissoes) => qtdMissoes.user === username);
           const numMissoes = missao ? missao.count : 0;
       
-          // Verifica se a soma de ouro doado pelo usuário é maior ou igual a 700 vezes o número de missões que ele fez
+          // Verifica se a quantidade de ouro doada é suficiente
           const totalGold = doacao.gold;
-          const votouEContribuiu = totalGold >= (700 * (numMissoes + 1));
+          votouEContribuiu = totalGold >= (700 * (numMissoes + 1));
           console.log(`${username}: ${totalGold} e ${numMissoes}`)
-        console.log(`${username} votou e contribuiu? ${votouEContribuiu}`)
+        
+        //Ativa ou desativa a quest para a pessoa
+        
+        fetch(`https://api.wolvesville.com/clans/${clanID}/members/${id}/participateInQuests`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Bot ${botID}`
+            },
+            body: JSON.stringify({"participateInQuests": votouEContribuiu})
+        })
+        .then((res) => res.json())
+        .then((json) => console.log(json))
           
         }
       }
     }
 viewDonates()
-//cron.schedule('*/80 * * * * *', viewDonates)
+//cron.schedule('* * * * * *', viewDonates)
