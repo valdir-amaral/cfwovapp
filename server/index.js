@@ -1,6 +1,8 @@
 import cron from 'node-cron'
 import PocketBase from 'pocketbase'
-
+import express from 'express'
+const app = express()
+const port = process.env.PORT || 8080
 const pb = new PocketBase('http://localhost:8090')
 
 let botID = 'lv54QwdhOaTdAKCBcVCobHu2a2LYInHmGFlXP1N1K6eCQEYiUjXKoMStIOnLRyZx'
@@ -123,18 +125,7 @@ async function viewDonates() {
         .then((json) => console.log(json))
         }
       }
-      fetch(`https://api.wolvesville.com/clans/${clanID}/members/ba79355f-3596-4077-8d12-b9422c99a5d2/participateInQuests`, {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bot ${botID}`
-            },
-            body: JSON.stringify({"participateInQuests": true})
-        })
-        .then((res) => res.json())
-        .then((json) => console.log(json))
-        
     }
+      
 viewDonates()
 //cron.schedule('* * * * * *', viewDonates)
