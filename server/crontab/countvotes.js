@@ -25,6 +25,19 @@ async function contarVotos() {
 
         mostVotedSkin = winnerSkin
     })
+    const quests = await pb.collection('quests').getFirstListItem()
+    if(quests === undefined) {
+        const record = await pb.collection('quests').create({
+            idQuest: mostVotedSkin,
+            voteQtd: qtdVote
+        })
+    } else {
+        const quest = await pb.collection('quests').update(quests.id, {
+            idQuest: mostVotedSkin,
+            voteQtd: qtdVote
+        })
+    }
+    
     
 }
 contarVotos()
