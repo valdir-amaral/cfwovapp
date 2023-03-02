@@ -43,54 +43,30 @@ async function viewDonates() {
     })
     const json = await response.json()
     data = json
+    
     donates = data.filter((item) => item.type === 'DONATE')
+    donates.length = 50
+    console.log(donates)
 
-
+    //console.log(donates[0].creationTime.slice(0,10))
     const donationPerUser = {};
 
+    const contributors = []
     donates.forEach((objeto) => {
     if (donationPerUser[objeto.playerUsername]) {
-        donationPerUser[objeto.playerUsername] += objeto.gold;
+        return
         
     } else {
-        donationPerUser[objeto.playerUsername] = objeto.gold;
+        contributors.push({playerUsername: objeto.playerUsername, gold: objeto.gold, criacao: objeto.creationTime.slice(0, 10)})
     }
     
     });
-    
-    let doacoes = Object.entries(donationPerUser).map(([playerUsername, gold]) => ({ playerUsername, gold }));
+    console.log(contributors)
 
-    
-    let resposta = await fetch(`https://api.wolvesville.com/clans/${clanID}/quests/history`, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': `Bot ${botID}`
-        }
-    })
-    const json2 = await resposta.json()
-    data2 = json2
-
-    const contagemDoacoesPorUsuario = {};
-    data2.forEach((objeto) => {
-        objeto.participants.forEach((participant) => {
-            if (contagemDoacoesPorUsuario[participant.username]) {
-                contagemDoacoesPorUsuario[participant.username]++;
-            } else {
-                contagemDoacoesPorUsuario[participant.username] = 1;
-            }
-        })
-    
-    });
-
-    let qtdMissoes = Object.entries(contagemDoacoesPorUsuario).map(([user, count]) => ({ user, count }));
-    
-
-    for (let i = 0; i < doacoes.length; i++) {
+    for (let i = 0; i < contributors.length; i++) {
         let votouEContribuiu = false
-        const doacao = doacoes[i];
-        const username = doacao.playerUsername;
+        const contributor = contributors[i];
+        const username = contributor.playerUsername;
       
         // Verifica se o usuário está presente no array de votos (records)
         const index = records.findIndex((record) => record.user === username);
@@ -101,31 +77,29 @@ async function viewDonates() {
                     id = voto.idplayer
                 }
             })
-          // Obtém o número de missões que o jogador fez a partir do array qtdMissoes
-          const missao = qtdMissoes.find((qtdMissoes) => qtdMissoes.user === username);
-          const numMissoes = missao ? missao.count : 0;
-      
-          // Verifica se a quantidade de ouro doada é suficiente
-          const totalGold = doacao.gold;
-          votouEContribuiu = totalGold >= (700 * (numMissoes + 1));
-          console.log(`${username}: ${totalGold} e ${numMissoes}`)
+            // Verifica se a quantidade de ouro doada é suficiente e se a doação é recente (dois dias)
+            const totalGold = contributor.gold;
+            const diffInMs = new Date() - new Date(contributor.criacao)
+            const diffInDays = Math.trunc(diffInMs / (1000*60*60*24))
+            votouEContribuiu = totalGold >= 700 && diffInDays <= 3;
+            console.log(`${username} doou ${totalGold} há ${diffInDays} dias. Pode fazer a próxima missão? ${votouEContribuiu}`)
         
-        //Ativa ou desativa a quest para a pessoa
-        
-        fetch(`https://api.wolvesville.com/clans/${clanID}/members/${id}/participateInQuests`, {
-            method: 'PUT',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bot ${botID}`
-            },
-            body: JSON.stringify({"participateInQuests": votouEContribuiu})
-        })
-        .then((res) => res.json())
-        .then((json) => console.log(json))
+            //Ativa a quest para a pessoa
+            if(votouEContribuiu) {
+                fetch(`https://api.wolvesville.com/clans/${clanID}/members/${id}/participateInQuests`, {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bot ${botID}`
+                    },
+                    body: JSON.stringify({"participateInQuests": true})
+            })
+            .then((res) => res.json())
+            .then((json) => console.log(json))
+            }
         }
-      }
     }
-      
+}
 viewDonates()
 //cron.schedule('* * * * * *', viewDonates)
