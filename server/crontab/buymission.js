@@ -1,35 +1,11 @@
-import cron from 'node-cron'
+
 import PocketBase from 'pocketbase'
-import express from 'express'
-const app = express()
-const port = process.env.PORT || 8080
 const pb = new PocketBase('http://localhost:8090')
 
 let botID = 'lv54QwdhOaTdAKCBcVCobHu2a2LYInHmGFlXP1N1K6eCQEYiUjXKoMStIOnLRyZx'
 let clanID = '8a1ead4a-2269-4ae8-95b3-afce4639bd15'
 
-var mostVotedSkin, data, data2, donates, records
-//Conta os votos
-async function contarVotos() {
-    records = await pb.collection('votos').getFullList(200)
-
-    const occurences = records.reduce((acc,curr) => {
-        return acc[curr.idmissao] ? ++acc[curr.idmissao] : acc[curr.idmissao] = 1, acc
-    },{})
-    
-    let mostVoted = -Infinity 
-    var winnerSkin = null
-    for (let qtdVote in occurences) {
-        if(occurences[qtdVote] > mostVoted) {
-            mostVoted = occurences[qtdVote];
-            winnerSkin = qtdVote
-        }
-    }
-    mostVotedSkin = winnerSkin
-    return winnerSkin
-   
-}
-cron.schedule('* * * * * *', contarVotos)
+var data, donates, records
 
 //Analisa quem pagou pelos votos e inclui na missão
 async function viewDonates() {
@@ -63,6 +39,7 @@ async function viewDonates() {
     });
     console.log(contributors)
 
+    records = await pb.collection('votos').getFullList(200)
     for (let i = 0; i < contributors.length; i++) {
         let votouEContribuiu = false
         const contributor = contributors[i];
@@ -102,4 +79,3 @@ async function viewDonates() {
     }
 }
 viewDonates()
-//cron.schedule('* * * * * *', viewDonates)
