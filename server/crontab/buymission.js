@@ -75,7 +75,22 @@ async function viewDonates() {
             .then((res) => res.json())
             .then((json) => console.log(json))
             }
+
+            //Procura a missão mais votada
+            const mostVotedQuest = await pb.collection('quests').getFirstListItem()
+            let questId = mostVotedQuest.questId
+            //Compra a missão
+            fetch(`https://api.wolvesville.com/clans/${clanID}/quests/claim`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bot ${botID}`
+                },
+                body: JSON.stringify({"questId": questId})
+            })
         }
     }
 }
 viewDonates()
+
