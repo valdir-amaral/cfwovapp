@@ -37,7 +37,6 @@ async function viewDonates() {
     }
     
     });
-    console.log(contributors)
 
     records = await pb.collection('votos').getFullList(200)
     for (let i = 0; i < contributors.length; i++) {
@@ -48,19 +47,20 @@ async function viewDonates() {
         // Verifica se o usuário está presente no array de votos (records)
         const index = records.findIndex((record) => record.user === username);
         if (index !== -1) {
-            let id
+            let id, mvp
             records.forEach((voto) => {
                 if (voto.user == username) {
                     id = voto.idplayer
+                    mvp = voto.mvp
                 }
             })
             // Verifica se a quantidade de ouro doada é suficiente e se a doação é recente (dois dias)
             const totalGold = contributor.gold;
             const diffInMs = new Date() - new Date(contributor.criacao)
             const diffInDays = Math.trunc(diffInMs / (1000*60*60*24))
-            votouEContribuiu = totalGold >= 700 && diffInDays <= 3;
+            votouEContribuiu = (totalGold >= 700 && diffInDays <= 3) || mvp;
             console.log(`${username} doou ${totalGold} há ${diffInDays} dias. Pode fazer a próxima missão? ${votouEContribuiu}`)
-        
+            
             //Ativa a quest para a pessoa
             if(votouEContribuiu) {
                 fetch(`https://api.wolvesville.com/clans/${clanID}/members/${id}/participateInQuests`, {
@@ -77,8 +77,10 @@ async function viewDonates() {
             }
 
             //Procura a missão mais votada
-            const mostVotedQuest = await pb.collection('quests').getFirstListItem()
+            const mostVotedQuest = await pb.collection('quests').getFullList(1)
+            console.log(mostVotedQuest)
             let questId = mostVotedQuest.questId
+            /*
             //Compra a missão
             fetch(`https://api.wolvesville.com/clans/${clanID}/quests/claim`, {
                 method: 'POST',
@@ -89,6 +91,11 @@ async function viewDonates() {
                 },
                 body: JSON.stringify({"questId": questId})
             })
+            */
+           records.forEach((voto) => {
+                voto.skin = '',
+                voto.idmissao = ''
+           })
         }
     }
 }

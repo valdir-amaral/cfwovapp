@@ -24,19 +24,24 @@ async function contarVotos() {
         }
 
         mostVotedSkin = winnerSkin
+        return mostVotedSkin
     })
-    const quests = await pb.collection('quests').getFirstListItem()
-    if(quests === undefined) {
-        const record = await pb.collection('quests').create({
-            idQuest: mostVotedSkin,
-            voteQtd: qtdVote
-        })
-    } else {
-        const quest = await pb.collection('quests').update(quests.id, {
-            idQuest: mostVotedSkin,
-            voteQtd: qtdVote
-        })
-    }
+    .then(async(res) => {
+        const quests = await pb.collection('quests').getFullList(1)
+        
+        if(quests.length == 0) {
+            const record = await pb.collection('quests').create({
+                idQuest: mostVotedSkin,
+                voteQtd: res
+            })
+        } else {
+            const quest = await pb.collection('quests').update(quests[0].id, {
+                idQuest: mostVotedSkin,
+                voteQtd: res
+            })
+        }
+    })
+    
     
     
 }
