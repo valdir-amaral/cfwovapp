@@ -7,8 +7,7 @@
 	let options = { gaPageviews: true};
 </script>
 
-
-<Router {routes} {options} />
+<Router {routes} {options} slot="user"/>
 
 <style>
 	:global(body) {

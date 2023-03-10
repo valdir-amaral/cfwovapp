@@ -1,3 +1,4 @@
+import { pbStore } from './stores'
 import MenuIndex from './pages/MenuIndex.svelte'
 import greenlayout from './components/layouts/greenlayout.svelte'
 import Ranking from './pages/Ranking.svelte'
@@ -6,12 +7,14 @@ import Missions from './pages/Missions.svelte'
 import Login from './pages/Login.svelte'
 
 function userIsLogged() {
-    return true
+    console.log(pbStore.authStore.isValid)
+    return pbStore.authStore.isValid
 }
   
   const routes = [
     {
         name: '/',
+        onlyIf: { user: !userIsLogged, redirect: '/inicio'},
         component: Login,
         layout: greenlayout,
     },

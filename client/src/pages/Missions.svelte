@@ -1,11 +1,11 @@
 <script>
     import { pbStore } from "../stores";
+    import {navigateTo} from 'svelte-router-spa'
     import Fetch from "../components/Fetch.svelte";
     import Header from "../components/Header.svelte";
     import Modal from "../components/Modal.svelte";
     import FullList from "../components/db/FullList.svelte";
-    import List from "../components/db/List.svelte";
-    import { raf } from "svelte/internal";
+    import User from '../components/db/User.svelte'
     const clanID = "8a1ead4a-2269-4ae8-95b3-afce4639bd15";
     
     let ativo = false;
@@ -22,6 +22,13 @@
     }
 
     async function votar() {
+        if(!$pbStore.authStore.isValid) {
+            alert('não pode votar, animal')
+            missaoId = ''
+            missaoFocada = ''
+            return
+        }
+
         nomeMissao = missaoFocada
         localStorage.nomeMissao = missaoFocada
         if (localStorage.voto) {
@@ -51,6 +58,12 @@
 </script>
 
 <Header titulo="Missões"/>
+<!-- svelte-ignore a11y-missing-attribute -->
+<User>
+    <!-- svelte-ignore missing-declaration -->
+    <!-- svelte-ignore a11y-click-events-have-key-events -->
+    <div style="margin-top: 20px;" slot="signedout"><p>Ei, visitante, você não pode votar em uma missão, porque não está cadastrado, <button on:click={() => navigateTo('/')}>FAÇA LOGIN</button></p></div>
+</User>
 <FullList collection="votos" batch=50 let:records>
     <p>Total de votos: {records.length}</p>
     <span slot="error" let:error>{error}</span>
