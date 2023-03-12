@@ -1,3 +1,4 @@
+import cron from 'node-cron'
 import PocketBase from 'pocketbase';
 const pb = new PocketBase('http://localhost:8090');
 
@@ -5,6 +6,7 @@ let botID = 'lv54QwdhOaTdAKCBcVCobHu2a2LYInHmGFlXP1N1K6eCQEYiUjXKoMStIOnLRyZx';
 let clanID = '8a1ead4a-2269-4ae8-95b3-afce4639bd15';
 
 async function checkActualQuest() {
+    console.log('Checado')
     fetch(`https://api.wolvesville.com/clans/${clanID}/quests/active`, {
         method: 'GET',
         headers: {
@@ -21,7 +23,8 @@ async function checkActualQuest() {
 
         if(json.tierFinished) { // se a nível da missão foi concluído
             // pula para a próxima etapa
-            fetch(`https://api.wolvesville.com/clans/${clanID}/quests/active/skipWaitingTime`, {
+            console.log('Nível finalizado')
+            /*fetch(`https://api.wolvesville.com/clans/${clanID}/quests/active/skipWaitingTime`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -29,7 +32,7 @@ async function checkActualQuest() {
                     'Authorization': `Bot ${botID}`
                 }
             })
-            
+            */
             // manda uma mensagem de agradecimento
             fetch(`https://api.wolvesville.com/clans/${clanID}/chat`, {
                 method: 'POST',
@@ -38,9 +41,10 @@ async function checkActualQuest() {
                     'Accept': 'application/json',
                     'Authorization': `Bot ${botID}`
                 },
-                body: JSON.stringify({"message": "Beep beep, a etapa foi concluída, parabéns a todos!"})
+                body: JSON.stringify({"message": "Uma etapa da missão foi concluída, obrigado pela participação de todos!"})
             })
         }
     })
 }
-checkActualQuest()
+console.log('Começou')
+cron.schedule('0 0/30 * 1/1 * *', checkActualQuest)
