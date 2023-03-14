@@ -19,25 +19,25 @@ async function checkActualQuest() {
         return res.json()
     })
     .then((json) => {
-        console.log('Checado')
         console.log(`terminou? ${json.tierFinished ? "Sim" : "Não"}`)
         let participants = json.participants
         participants.sort(function(a,b) {
             return b.xp - a.xp
         })
-        let mensagem = `Uma etapa da missão foi concluída, obrigado pela participação de todos!\nTop 3:\n`
+        
+        let mensagem = `A etapa ${json.tier} da missão foi concluída, obrigado pela participação de todos!\n\n🏆 | Top 3:\n`
         participants.forEach((p, index) => {
             if(index < 3) {
-                mensagem += `${index + 1}º ${p.username}: ${p.xp}xp\n`
+                mensagem += `  ${index + 1}º ${p.username}: ${p.xp}xp\n`
             }
             
         })
         mensagem += "\n*Lembrando que o primeiro lugar pode escolher ganhar 10 rosas ou não pagar a próxima missão!\n"
         if(!json.quest) return // se não existir missões
-  
         if(json.tierFinished) { // se a nível da missão foi concluído
             // pula para a próxima etapa
-            console.log('mensagem enviada')
+            cont++
+            
             fetch(`https://api.wolvesville.com/clans/${clanID}/quests/active/skipWaitingTime`, {
                 method: 'POST',
                 headers: {
@@ -46,7 +46,10 @@ async function checkActualQuest() {
                     'Authorization': `Bot ${botID}`
                 }
             })
-            
+            .then((res) => res.json())
+            .then((json) => console.log(json))
+            if (cont != 1) return
+            console.log('mensagem enviada!')
             // manda uma mensagem de agradecimento
             fetch(`https://api.wolvesville.com/clans/${clanID}/chat`, {
                 method: 'POST',
@@ -60,9 +63,12 @@ async function checkActualQuest() {
             .then((response) => {
                 return response.json()
             })
+            .then((jsonRes) => {
+                console.log(jsonRes)
+            })
             
         }
     })
 }
 checkActualQuest()
-cron.schedule('0,30 * * * * *', checkActualQuest)
+cron.schedule('1 * * * * *', checkActualQuest)
